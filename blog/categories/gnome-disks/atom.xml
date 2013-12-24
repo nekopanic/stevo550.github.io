@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Gnome-disks | Steven Farlie's Blog]]></title>
+  <link href="http://stevenfarlie.github.io/blog/categories/gnome-disks/atom.xml" rel="self"/>
+  <link href="http://stevenfarlie.github.io/"/>
+  <updated>2013-12-24T17:53:36+11:00</updated>
+  <id>http://stevenfarlie.github.io/</id>
+  <author>
+    <name><![CDATA[Steven Farlie]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Backing It Up With Rdiff-backup]]></title>
+    <link href="http://stevenfarlie.github.io/blog/2013/12/24/backing-it-up-with-rdiff-backup/"/>
+    <updated>2013-12-24T17:42:02+11:00</updated>
+    <id>http://stevenfarlie.github.io/blog/2013/12/24/backing-it-up-with-rdiff-backup</id>
+    <content type="html"><![CDATA[<p>I hate doing backups.</p>
+
+<p>I hate thinking about losing data. I never really had much to keep until recently. Somehow I’ve managed to collect a few gigabytes here and there that, while I could live without it, memories would fade. I’ve had so many pleasant ones lately that I would rather keep them.</p>
+
+<h2>Just shove it in the cloud!</h2>
+
+<p>Well, is that really an option these days? Two years ago it was all the rage. Your data would never even touch your hard disk. How would you feel if your Google account was deleted, and you lost all access to your email history? I had a huge Google Reader history, and that’s all gone now.</p>
+
+<p>Even a technically perfect cloud backup solution can still be taken away from you. Unless you physically hold the data in your hands, it’s not yours.</p>
+
+<h2>A basic setup</h2>
+
+<p>I have a USB hard disk, which I call <code>bananaboat</code>. It contains a single encrypted volume (created using the super-easy <a href="https://apps.ubuntu.com/cat/applications/precise/gnome-disk-utility/"><code>gnome-disks</code></a> program in Linux).</p>
+
+<p>It took a bit of faffing about, but I figured out the <code>rdiff-backup</code> utility enough to get a basic script going here. It’s simple enough:</p>
+
+<p>``` sh</p>
+
+<h1>!/bin/bash</h1>
+
+<p>BACKUP_PATH=/media/swf/BANANABOAT/$HOSTNAME
+if [ ! -d /media/swf/BANANABOAT ]; then
+  read -e -i &ldquo;rdiff-backup destination (e.g. bananaking.local::/media/swf/BANANABOAT/seagoat): &rdquo; BACKUP_PATH
+fi</p>
+
+<p>rdiff-backup -v5 &mdash;exclude-if-present .nobackup &mdash;include-globbing-filelist $HOME/.backup.$HOSTNAME / $BACKUP_PATH
+```</p>
+
+<ul>
+<li>Backup to a directory on the USB disk using the hostname of the machine (I have two machines, seagoat and bananaking).</li>
+<li>Read from <code>$HOME/.backup.hostname</code> (e.g. <code>$HOME/.backup.seagoat</code>) for the list of directories to back up.</li>
+<li>If I don’t want a particular directory backed up, I put a <code>.nobackup</code> file in it.</li>
+</ul>
+
+
+<p>Note that it really is powered by the backup file (<a href="https://github.com/stevenfarlie/dotfiles/blob/master/home/.backup.seagoat">example</a>). That contains the include/exclude list to use and if you aren’t careful it will back up everything. There are a lot of cache files and things you don’t really need to back up.</p>
+
+<h2>Sharing and syncing</h2>
+
+<p>I do have a couple of machines, and am often reformatting/reinstalling and trashing things. So I use the awesome <code>homeshick</code> utility to keep everything in sync. On Linux it is pretty easy: I put the backup executable in <code>$HOME/.local/bin</code>. I’m still an old fuddy-duddy, so I put my config files in <code>$HOME</code>. Hey, it’s a free world.</p>
+
+<h2>tl;dr</h2>
+
+<p>I’m pretty happy with the combination of <code>rdiff-backup</code> and <code>homeshick</code>. It lets me store and share my backup configuration while still keeping the backups themselves private and encrypted. I can delete files with impunity, because they’ll still be around in the backups if I ever really need them again. Cleaning up files is super easy when you know you can safely delete things.</p>
+
+<p>It also gives a good starting point to using cloud backups, because rdiff-backups are so simple to understand. I wouldn’t recommend using cloud backups as your primary method. Instead, use them to backup your backups!</p>
+]]></content>
+  </entry>
+  
+</feed>
