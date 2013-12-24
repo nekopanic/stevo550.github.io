@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: 
+
+Sitemap: http://stevenfarlie.github.io/sitemap.xml 
