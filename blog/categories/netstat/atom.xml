@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Netstat | Steven Farlie's Blog]]></title>
+  <link href="http://stevenfarlie.github.io/blog/categories/netstat/atom.xml" rel="self"/>
+  <link href="http://stevenfarlie.github.io/"/>
+  <updated>2013-12-24T17:35:37+11:00</updated>
+  <id>http://stevenfarlie.github.io/</id>
+  <author>
+    <name><![CDATA[Steven Farlie]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Splunking Netstat]]></title>
+    <link href="http://stevenfarlie.github.io/blog/2013/12/24/splunking-netstat/"/>
+    <updated>2013-12-24T16:49:49+11:00</updated>
+    <id>http://stevenfarlie.github.io/blog/2013/12/24/splunking-netstat</id>
+    <content type="html"><![CDATA[<p>Recently I found myself doing a little capacity planning for a customer&rsquo;s web service. They were using <a href="http://unicorn.bogomips.org/">Unicorn</a>, which, although a perfectly serviceable webserver, has limitations on the number of HTTP requests it can service at one time. Unicorn uses a fixed process model and requires that the application completes requests quickly. If the application doesn&rsquo;t then Unicorn can quickly run out of processes to service new requests. The resulting behaviour is, erm, <em>undesirable</em>.</p>
+
+<p>We need to keep on top of the Linux TCP stack to make sure that Unicorn is being used for what it is intended. Enter <a href="http://www.splunk.com/">Splunk</a>, the swiss-army chainsaw of log analysis. My customer uses it for basically everything. It&rsquo;s a very solid tool, but I found support for logging the Linux network stack to be very limited. <a href="http://apps.splunk.com/app/273/">Splunk App for Unix and Linux</a>, from what I could tell, basically just logged the output of the <code>netstat</code> command. You can see below that it isn&rsquo;t the most parseable output format:</p>
+
+<pre><code>$ netstat --tcp --numeric-hosts --numeric-ports --timers
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       Timer
+tcp        0      0 127.0.0.1:57343         127.0.0.1:51172         ESTABLISHED off (0.00/0/0)
+tcp        0      0 127.0.0.1:46408         127.0.0.1:8000          TIME_WAIT   timewait (22.15/0/0)
+tcp        0      0 192.168.1.10:45374      74.125.31.125:5222      ESTABLISHED keepalive (28.56/0/0)
+</code></pre>
+
+<p>It would be great to have something a little more Splunk-friendly. For example key-value pairs are instantly recognisable by Splunk. Something like this would be great:</p>
+
+<pre><code>protocol=tcp recv_q=0 send_q=0 local_address=127.0.0.1:57343 foreign_address=127.0.0.1:51172 state=ESTABLISHED timer=off countdown=0.00 retries=0 window_probes=0
+protocol=tcp recv_q=0 send_q=0 local_address=127.0.0.1:46408 foreign_address=127.0.0.1:8000 state=WAIT timer=timewait countdown=22.15 retries=0 window_probes=0
+protocol=tcp recv_q=0 send_q=0 local_address=192.168.1.10:45374 foreign_address=74.125.31.125:5222 state=ESTABLISHED timer=keepalive countdown=28.56 retries=0 window_probes=0
+</code></pre>
+
+<p>This is achievable with a little Python script I whipped up. It takes the output from the above <code>netstat</code> command and reformats it to be a little more Splunkable:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="err">!</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">env</span> <span class="n">python</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">check_output</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">stdout</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">output</span> <span class="o">=</span> <span class="n">check_output</span><span class="p">([</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">netstat</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">&amp;</span><span class="n">mdash</span><span class="p">;</span><span class="n">tcp</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">&amp;</span><span class="n">mdash</span><span class="p">;</span><span class="n">numeric</span><span class="o">-</span><span class="n">hosts</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">&amp;</span><span class="n">mdash</span><span class="p">;</span><span class="n">numeric</span><span class="o">-</span><span class="n">ports</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">&amp;</span><span class="n">mdash</span><span class="p">;</span><span class="n">timers</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;])</span>
+</span><span class='line'><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">protocol</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">recv_q</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">send_q</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">local_address</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">foreign_address</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">state</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">timer</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">countdown</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">retries</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">window_probes</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;]</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">lines</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span>\<span class="n">n</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;)</span>
+</span><span class='line'><span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">values</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+</span><span class='line'><span class="c"># The timers are packaged in (N/N/N) format so we need to break it up.</span>
+</span><span class='line'><span class="n">timer_values</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s">&quot;()&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">for</span> <span class="n">key_value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span><span class="n">values</span><span class="p">[:</span><span class="mi">7</span><span class="p">]</span><span class="o">+</span><span class="n">timer_values</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;{0[0]}={0[1]} &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key_value</span><span class="p">))</span>
+</span><span class='line'><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Now we just need to get Splunk to recognise that each individual line from the script is an event. We could use the special sourcetype <code>__singleline</code>, but I prefer to put in new custom sourcetype called <code>netstat</code>. Then with a quick addition to <code>props.conf</code> we can get our events parsing correctly:</p>
+
+<pre><code>[netstat]
+SHOULD_LINEMERGE=false
+</code></pre>
+
+<p>Success! We can see our netstat events in Splunk:</p>
+
+<p><img src="/images/posts/2013-12-24-splunking-netstat/01.png"></p>
+
+<p>You can see the &ldquo;Interesting Fields&rdquo; section has picked out all the fields we specified earlier. This allows for quick and easy searching and visualisation. For example a basic timechart:</p>
+
+<p><img src="/images/posts/2013-12-24-splunking-netstat/02.png"></p>
+
+<p>There is one limitation here: each individual connection logs multiple events. It would be great if we could <em>bundle up</em> events relating to a connection to create one event for the lifecycle of the connection. We can do this in Splunk with the <a href="http://docs.splunk.com/Documentation/Splunk/6.0.1/SearchReference/Transaction">transaction</a> command. Bundle by <code>local_address</code> and <code>foreign_address</code> to isolate individual network connections. If you think that client port reuse is a significant concern, use the <code>maxpause</code> option to adjust how long Splunk will wait between events before starting a new transaction. The <code>transaction</code> command sets a useful <code>duration</code> field, which is the length of time the transaction was open. This can be used for a rough determination of TCP connection duration:</p>
+
+<p><img src="/images/posts/2013-12-24-splunking-netstat/03.png"></p>
+
+<p>That&rsquo;s it for a basic integration of netstat into Splunk. It&rsquo;s pretty basic but it does what we want for now. Hardcore users will want to increase the performance significantly. Perhaps by indexing more aggressively and/or precalculating transactions.</p>
+
+<p>Happy Splunking!</p>
+]]></content>
+  </entry>
+  
+</feed>
