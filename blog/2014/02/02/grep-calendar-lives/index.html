@@ -1,0 +1,235 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Grep-calendar Lives! And a Rant - Steven Farlie's Blog</title>
+  <meta name="author" content="Steven Farlie">
+
+  
+  <meta name="description" content="Today I finally pushed the reworking of grep-calendar. It&rsquo;s a web service that lets you grep your webcal feeds, removing the ones that you don& &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://stevenfarlie.github.io/blog/2014/02/02/grep-calendar-lives">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/feed.xml" rel="alternate" title="Steven Farlie's Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Steven Farlie's Blog</a></h1>
+  
+    <h2>Computery bits and pieces</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/feed.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:stevenfarlie.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Grep-calendar Lives! And a Rant</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-02T14:34:30+11:00" pubdate data-updated="true">Feb 2<span>nd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Today I finally pushed the reworking of <code>grep-calendar</code>. It&rsquo;s a web service that lets you grep your webcal feeds, removing the ones that you don&rsquo;t want. tl;dr you can find it <a href="http://grep-calendar.herokuapp.com/index.html">here</a>.</p>
+
+<p>My girlfriend lives through her calendar. Having a travelling business and working odd hours means that it&rsquo;s really useful to know when her day is over. The problem is that her company software only gives a calendar feed for the entire company. So I get 10 employees worth of appointments showing up on my calendar. Not ideal. So I decided to write a little program that will filter out any non-girlfriend related items in the calendar. Just give <code>url=http://example.com/feed.ical</code> and <code>query=Girlfriend</code> and it returns ical events containing &lsquo;Girlfriend&rsquo;. Sorted.</p>
+
+<p>To start, I did a little search and found the <a href="http://rubygems.org/gems/icalendar">ICalendar gem</a>. Fifteen minutes later I had a <a href="http://www.sinatrarb.com/">Sinatra</a> app on <a href="https://devcenter.heroku.com/">Heroku</a> working perfectly. I was so pleased with the result I showed my girl how clean my calendar is now.</p>
+
+<p>That was the first mistake.</p>
+
+<p>My girlfriend, also pleased as punch with the solution, shared it with everyone in her company. The instructions she gave were pretty straightforward: copy the URL, replace &ldquo;FirstName%20LastName&rdquo; with your own name, keeping the %20, and paste that url into your calendar. Now her employees are, in some cases, about as computer literate as our cat. So I say, &ldquo;well I could probably just put a nice web page in front of it to make it easy&rdquo;.</p>
+
+<p>And that was my second mistake.</p>
+
+<p>Of course, I could have just bashed out something without styling, using simple forms and whole-page refreshes. But no, single page apps are the shiny new thing. Plus they have been around for years now. They must be really mature and productive after all this time. Let&rsquo;s do AngularJS and Foundation.</p>
+
+<p>And that was my third mistake.</p>
+
+<p>Fifteen hours later, scraping in time here and there, I&rsquo;ve finally gotten the first version pushed. Web development feels so incredibly backward and hacky. It was obviously made up as we went along and takes a really long time to get something out that looks &ldquo;normal&rdquo;. By comparison, GUI toolkits can get consistent look and feel without requiring three wildly different languages, or an array of preprocessors, or entire re-implementation of the tech stack in order to get a test suite to run headless.</p>
+
+<p>In the end I didn&rsquo;t even include a test suite outside of the core Ruby algorithm. It&rsquo;s just an absolute nightmare to test a page without having to fire up a whole web browser.</p>
+
+<p>But in reality it was the little things. Like, trying to retrieve query parameters when in JS (I guess you have to parse them yourself?). Or how a big toolkit like Foundation provides a lot of form styling, but not a spinner, which is probably the most important visual feedback you can give.</p>
+
+<p>I just find the web so disappointing. The things that could have been! <a href="http://www.w3.org/Submission/1996/1/WD-jsss-960822">Javascript Style Sheets!</a> Or even just stealing the layout concepts from GUI toolkits. The web was choking on semantic document layout for years before finally ditching it for grids.</p>
+
+<p>There has been a lot of innovation in visual design on the web, I&rsquo;ll grant it that. But it just seems that unless you are a professional web designer you can&rsquo;t get very far. Why can&rsquo;t my girlfriend, who has maintained multiple Wordpress blogs, debug simple problems with her website? It&rsquo;s because there are just so many standards, so many concepts and so many moving parts to get a bit of text, a few images and a form onto someone&rsquo;s screen.</p>
+
+<p>It&rsquo;s pretty disgraceful, the state of things. But you see it all through the industry. Every new layer you add is another layer between the professionals and the amateurs. Us pros do really well out of it. Pity it&rsquo;s so hard for everyone else.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Steven Farlie</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-02T14:34:30+11:00" pubdate data-updated="true">Feb 2<span>nd</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/angular/'>angular</a>, <a class='category' href='/blog/categories/css/'>css</a>, <a class='category' href='/blog/categories/foundation/'>foundation</a>, <a class='category' href='/blog/categories/heroku/'>heroku</a>, <a class='category' href='/blog/categories/html/'>html</a>, <a class='category' href='/blog/categories/icalendar/'>icalendar</a>, <a class='category' href='/blog/categories/rant/'>rant</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/sinatra/'>sinatra</a>, <a class='category' href='/blog/categories/sinatra/'>sinatra</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://stevenfarlie.github.io/blog/2014/02/02/grep-calendar-lives/" data-via="" data-counturl="http://stevenfarlie.github.io/blog/2014/02/02/grep-calendar-lives/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/12/24/backing-it-up-with-rdiff-backup/" title="Previous Post: Backing it up with rdiff-backup">&laquo; Backing it up with rdiff-backup</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/02/02/grep-calendar-lives/">Grep-calendar Lives! And a Rant</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/12/24/backing-it-up-with-rdiff-backup/">Backing It Up With Rdiff-backup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/12/24/splunking-netstat/">Splunking Netstat</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Steven Farlie -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

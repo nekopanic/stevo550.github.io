@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Angular | Steven Farlie's Blog]]></title>
+  <link href="http://stevenfarlie.github.io/blog/categories/angular/atom.xml" rel="self"/>
+  <link href="http://stevenfarlie.github.io/"/>
+  <updated>2014-02-02T15:12:02+11:00</updated>
+  <id>http://stevenfarlie.github.io/</id>
+  <author>
+    <name><![CDATA[Steven Farlie]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Grep-calendar Lives! And a Rant]]></title>
+    <link href="http://stevenfarlie.github.io/blog/2014/02/02/grep-calendar-lives/"/>
+    <updated>2014-02-02T14:34:30+11:00</updated>
+    <id>http://stevenfarlie.github.io/blog/2014/02/02/grep-calendar-lives</id>
+    <content type="html"><![CDATA[<p>Today I finally pushed the reworking of <code>grep-calendar</code>. It&rsquo;s a web service that lets you grep your webcal feeds, removing the ones that you don&rsquo;t want. tl;dr you can find it <a href="http://grep-calendar.herokuapp.com/index.html">here</a>.</p>
+
+<p>My girlfriend lives through her calendar. Having a travelling business and working odd hours means that it&rsquo;s really useful to know when her day is over. The problem is that her company software only gives a calendar feed for the entire company. So I get 10 employees worth of appointments showing up on my calendar. Not ideal. So I decided to write a little program that will filter out any non-girlfriend related items in the calendar. Just give <code>url=http://example.com/feed.ical</code> and <code>query=Girlfriend</code> and it returns ical events containing &lsquo;Girlfriend&rsquo;. Sorted.</p>
+
+<p>To start, I did a little search and found the <a href="http://rubygems.org/gems/icalendar">ICalendar gem</a>. Fifteen minutes later I had a <a href="http://www.sinatrarb.com/">Sinatra</a> app on <a href="https://devcenter.heroku.com/">Heroku</a> working perfectly. I was so pleased with the result I showed my girl how clean my calendar is now.</p>
+
+<p>That was the first mistake.</p>
+
+<p>My girlfriend, also pleased as punch with the solution, shared it with everyone in her company. The instructions she gave were pretty straightforward: copy the URL, replace &ldquo;FirstName%20LastName&rdquo; with your own name, keeping the %20, and paste that url into your calendar. Now her employees are, in some cases, about as computer literate as our cat. So I say, &ldquo;well I could probably just put a nice web page in front of it to make it easy&rdquo;.</p>
+
+<p>And that was my second mistake.</p>
+
+<p>Of course, I could have just bashed out something without styling, using simple forms and whole-page refreshes. But no, single page apps are the shiny new thing. Plus they have been around for years now. They must be really mature and productive after all this time. Let&rsquo;s do AngularJS and Foundation.</p>
+
+<p>And that was my third mistake.</p>
+
+<p>Fifteen hours later, scraping in time here and there, I&rsquo;ve finally gotten the first version pushed. Web development feels so incredibly backward and hacky. It was obviously made up as we went along and takes a really long time to get something out that looks &ldquo;normal&rdquo;. By comparison, GUI toolkits can get consistent look and feel without requiring three wildly different languages, or an array of preprocessors, or entire re-implementation of the tech stack in order to get a test suite to run headless.</p>
+
+<p>In the end I didn&rsquo;t even include a test suite outside of the core Ruby algorithm. It&rsquo;s just an absolute nightmare to test a page without having to fire up a whole web browser.</p>
+
+<p>But in reality it was the little things. Like, trying to retrieve query parameters when in JS (I guess you have to parse them yourself?). Or how a big toolkit like Foundation provides a lot of form styling, but not a spinner, which is probably the most important visual feedback you can give.</p>
+
+<p>I just find the web so disappointing. The things that could have been! <a href="http://www.w3.org/Submission/1996/1/WD-jsss-960822">Javascript Style Sheets!</a> Or even just stealing the layout concepts from GUI toolkits. The web was choking on semantic document layout for years before finally ditching it for grids.</p>
+
+<p>There has been a lot of innovation in visual design on the web, I&rsquo;ll grant it that. But it just seems that unless you are a professional web designer you can&rsquo;t get very far. Why can&rsquo;t my girlfriend, who has maintained multiple Wordpress blogs, debug simple problems with her website? It&rsquo;s because there are just so many standards, so many concepts and so many moving parts to get a bit of text, a few images and a form onto someone&rsquo;s screen.</p>
+
+<p>It&rsquo;s pretty disgraceful, the state of things. But you see it all through the industry. Every new layer you add is another layer between the professionals and the amateurs. Us pros do really well out of it. Pity it&rsquo;s so hard for everyone else.</p>
+]]></content>
+  </entry>
+  
+</feed>
