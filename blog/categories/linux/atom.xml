@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | Steven Farlie's Blog]]></title>
   <link href="http://stevenfarlie.github.io/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://stevenfarlie.github.io/"/>
-  <updated>2014-02-02T15:12:02+11:00</updated>
+  <updated>2014-02-07T16:13:27+11:00</updated>
   <id>http://stevenfarlie.github.io/</id>
   <author>
     <name><![CDATA[Steven Farlie]]></name>
@@ -12,6 +12,46 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Fun Friday #1]]></title>
+    <link href="http://stevenfarlie.github.io/blog/2014/02/07/fun-friday-2014-02-07/"/>
+    <updated>2014-02-07T12:37:40+11:00</updated>
+    <id>http://stevenfarlie.github.io/blog/2014/02/07/fun-friday-2014-02-07</id>
+    <content type="html"><![CDATA[<p>Every Friday I try to have a little programming fun. It might be some tools or some libraries or maybe just catching up on the blogs.</p>
+
+<h2>Enter The Matrix</h2>
+
+<p>Today I started with <a href="https://help.ubuntu.com/lts/serverguide/lxc.html">LXC</a>, the lightweight container technology for Linux. The server guide from Ubuntu is very well written and a great introduction. With a basic Ubuntu 12.04 server install I had a container up and running first try, all installed and ready to go. Very impressive!</p>
+
+<p>I would recommend giving LXC containers a try. Even if you aren&rsquo;t on Linux, and run a &ldquo;development&rdquo; VM or a &ldquo;server&rdquo; VM on OSX or Windows. If you&rsquo;ve ever had that problem of a giant complicated server that does four or five websites, plus some hacking around with disks and file sharing and all that junk then give it a go. It&rsquo;s a really neat way to split up a server without wasting much RAM or CPU.</p>
+
+<p>Now let&rsquo;s just all forget that BSD and Solaris have had this for years&hellip;</p>
+
+<h2>Yo-ho-ho</h2>
+
+<p>The other challenge of the day was to go through some Node/Yeoman/Angular stuff from <a href="http://tylerhenkel.com/creating-apps-with-angular-and-node-using-yeoman/?utm_source=javascriptweekly&amp;utm_medium=email">this blog post</a> by Tyler Henkel.</p>
+
+<p>So, yeah, Node. I was on Node maybe&hellip; three years ago? Aside from Yeoman nothing much seems to have changed. Express is still the big web framework and everything is dominated by callbacks and people arguing over the best way of handling callbacks. (Not that there is anything wrong with callbacks. One of my best friends is a callback.)</p>
+
+<p>One of the most annoying parts of the Node/NPM installation is that it <a href="https://npmjs.org/doc/README.html">still recommends a single system-wide installation</a>. I have a long, long (omg so long) history dealing with projects have different runtimes. Ruby 1.8.7/1.9/2.0/2.1, Java 1.4/1.5/1.6/1.7. All of these usually have some compiled library that only works on a particular version. The strange thing is, it&rsquo;s actually really straight-forward to just install Node locally:</p>
+
+<pre>
+$ tar xzf node-v0.10.25.tar.gz 
+$ cd node-v0.10.25
+$ ./configure --prefix=~/.local/opt/node
+$ make && make install
+$ export PATH=$PATH:~/.local/opt/node/bin
+</pre>
+
+
+<p>Now you can <code>npm install -g</code> to your heart&rsquo;s content. Install new versions of Node whenever you want and keep the old ones. Just update your <code>$PATH</code> to match.</p>
+
+<p>One of the big pluses in the Node world is the quality of their command-line tools. They have all the &ldquo;modern&rdquo; features like proper <code>--help</code> text and ANSI colour support, but <code>yo</code> (from Yeoman) goes another step ahead to have interactive prompts. The Javascript community is lucky in that they <em>do</em>  have to account for users who aren&rsquo;t intimately familiar with the command line. It&rsquo;s a very beginner-friendly place and I think there is a lot that other communities can learn.</p>
+
+<p>Still, thanks but no thanks to callbacks.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Backing It Up With Rdiff-backup]]></title>
