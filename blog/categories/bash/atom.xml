@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Bash | Steven Farlie's Blog]]></title>
+  <link href="http://stevenfarlie.github.io/blog/categories/bash/atom.xml" rel="self"/>
+  <link href="http://stevenfarlie.github.io/"/>
+  <updated>2014-02-07T16:21:37+11:00</updated>
+  <id>http://stevenfarlie.github.io/</id>
+  <author>
+    <name><![CDATA[Steven Farlie]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Nerdalicious #1]]></title>
+    <link href="http://stevenfarlie.github.io/blog/2014/02/07/nerdalicious-number-1/"/>
+    <updated>2014-02-07T16:18:40+11:00</updated>
+    <id>http://stevenfarlie.github.io/blog/2014/02/07/nerdalicious-number-1</id>
+    <content type="html"><![CDATA[<p>Picked up this handy link today while reading through the <a href="http://npmjs.org">npm</a> source: <a href="http://www.gnu.org/savannah-checkouts/gnu/autoconf/manual/autoconf-2.69/html_node/Portable-Shell.html">Portable Shell Programming</a> from the GNU Autoconf manual. It&rsquo;s a neat guide to keeping your shell scripts compatible all the way back to 1977. Pretty neat!</p>
+]]></content>
+  </entry>
+  
+</feed>
