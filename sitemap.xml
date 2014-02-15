@@ -21,12 +21,18 @@
         <lastmod>2014-02-07T16:20:17+11:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://stevenfarlie.github.io/blog/2014/02/15/that-one-weird-difference-between-braces-and-do-end-in-ruby/
+        </loc>
+        <lastmod>2014-02-15T13:11:26+11:00</lastmod>
+    </url>
+    <url>
         <loc>http://stevenfarlie.github.io/feed.xml</loc>
         <lastmod>2013-12-20T17:53:49+11:00</lastmod>
     </url>
     <url>
         <loc>http://stevenfarlie.github.io/blog/archives/</loc>
-        <lastmod>2014-02-07T16:20:17+11:00</lastmod>
+        <lastmod>2014-02-15T13:11:26+11:00</lastmod>
     </url>
     <url>
         <loc>http://stevenfarlie.github.io/robots.txt</loc>
@@ -34,6 +40,6 @@
     </url>
     <url>
         <loc>http://stevenfarlie.github.io/</loc>
-        <lastmod>2014-02-07T16:20:17+11:00</lastmod>
+        <lastmod>2014-02-15T13:11:26+11:00</lastmod>
     </url>
 </urlset>

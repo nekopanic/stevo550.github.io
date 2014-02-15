@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Parser | Steven Farlie's Blog]]></title>
+  <link href="http://stevenfarlie.github.io/blog/categories/parser/atom.xml" rel="self"/>
+  <link href="http://stevenfarlie.github.io/"/>
+  <updated>2014-02-15T13:15:06+11:00</updated>
+  <id>http://stevenfarlie.github.io/</id>
+  <author>
+    <name><![CDATA[Steven Farlie]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[That One Weird Difference Between {} and Do-end in Ruby]]></title>
+    <link href="http://stevenfarlie.github.io/blog/2014/02/15/that-one-weird-difference-between-braces-and-do-end-in-ruby/"/>
+    <updated>2014-02-15T12:42:52+11:00</updated>
+    <id>http://stevenfarlie.github.io/blog/2014/02/15/that-one-weird-difference-between-braces-and-do-end-in-ruby</id>
+    <content type="html"><![CDATA[<p>Earlier in the week I was in a TDD pairing session and we were looking at making some non-standard expectations on a Ruby error. We were using RSpec, and the <a href="https://www.relishapp.com/rspec/rspec-expectations/v/3-0/docs/built-in-matchers/raise-error-matcher#set-expectations-on-error-object-passed-to-block">documentation</a> mentions the following</p>
+
+<p>``` ruby
+describe &ldquo;#foo&rdquo; do
+  it &ldquo;raises NameError&rdquo; do</p>
+
+<pre><code>expect { Object.new.foo }.to raise_error { |error|
+  expect(error).to be_a(NameError)
+}
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>&ldquo;Well that looks good,&rdquo; I said. &ldquo;We can just replace those curly braces with a do-end block. That&rsquo;ll look prettier and match our coding style which uses do-end for blocks with multiple lines.&rdquo; (For the sake of argument let&rsquo;s reuse the example.)</p>
+
+<p>``` ruby
+describe &ldquo;#foo&rdquo; do
+  it &ldquo;raises IOError&rdquo; do</p>
+
+<pre><code>expect { Object.new.foo }.to raise_error do |error|
+  expect(error).to be_a(IOError)
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>&ldquo;Perfect! Now the test should fail because it does currently raise an error, but it doesn&rsquo;t raise the error we expect.&rdquo;</p>
+
+<p>Except that the test didn&rsquo;t fail. It passed just fine. Scratching our heads it looked a little strange. Did we have the right version of RSpec? Yes we did. Hmmm&hellip;. put a <code>binding.pry</code> in there&hellip; nope, didn&rsquo;t even start <a href="https://github.com/pry/pry">pry</a>.</p>
+
+<p>After a few minutes of this we changed the do-end back to curly braces and, what do you know, it worked!</p>
+
+<p>Looking into it a little deeper with the <a href="https://github.com/whitequark/parser">parser</a> gem you can see what is going on here. Given a spec file like this:</p>
+
+<p>``` ruby
+describe &ldquo;#foo&rdquo; do</p>
+
+<p>  it &ldquo;raises NameError {}-edition&rdquo; do</p>
+
+<pre><code>expect { Object.new.foo }.to raise_error { |error|
+  expect(error).to be_a(NameError)
+}
+</code></pre>
+
+<p>  end</p>
+
+<p>  it &ldquo;raises IOError do-end-edition&rdquo; do</p>
+
+<pre><code>expect { Object.new.foo }.to raise_error do |error|
+  expect(error).to be_a(IOError)
+end
+</code></pre>
+
+<p>  end</p>
+
+<p>end
+```</p>
+
+<p>We get a parse tree (with LISP-style s-expressions) like this:</p>
+
+<p>``` scheme
+(block
+  (send nil :describe</p>
+
+<pre><code>(str "#foo"))
+</code></pre>
+
+<p>  (args)
+  (begin</p>
+
+<pre><code>(block
+  (send nil :it
+    (str "raises NameError {}-edition"))
+  (args)
+  (send
+    (block
+      (send nil :expect)
+      (args)
+      (send
+        (send
+          (const nil :Object) :new) :foo)) :to
+    (block
+      (send nil :raise_error)
+      (args
+        (arg :error))
+      (send
+        (send nil :expect
+          (lvar :error)) :to
+        (send nil :be_a
+          (const nil :NameError))))))
+(block
+  (send nil :it
+    (str "raises IOError do-end-edition"))
+  (args)
+  (block
+    (send
+      (block
+        (send nil :expect)
+        (args)
+        (send
+          (send
+            (const nil :Object) :new) :foo)) :to
+      (send nil :raise_error))
+    (args
+      (arg :error))
+    (send
+      (send nil :expect
+        (lvar :error)) :to
+      (send nil :be_a
+        (const nil :IOError)))))))
+</code></pre>
+
+<p>```</p>
+
+<p>And there is the issue. Curly braces have a higher precedence than do-end blocks. With curly braces the block was passed to <code>raise_error</code>.</p>
+
+<p>To get the desired behaviour with do-end you need to override precedence with parentheses, like so:</p>
+
+<p>``` ruby
+  it &ldquo;raises IOError do-end-edition&rdquo; do</p>
+
+<pre><code>expect { Object.new.foo }.to(raise_error do |error|
+  expect(error).to be_a(IOError)
+end)
+</code></pre>
+
+<p>  end
+```</p>
+
+<p>That actually looks really ugly which defeats the purpose. Just trust the docs and use curly braces! :)</p>
+]]></content>
+  </entry>
+  
+</feed>
