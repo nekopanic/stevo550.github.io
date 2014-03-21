@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Git | Steven Farlie's Blog]]></title>
+  <link href="http://stevenfarlie.github.io/blog/categories/git/atom.xml" rel="self"/>
+  <link href="http://stevenfarlie.github.io/"/>
+  <updated>2014-03-21T11:39:11+11:00</updated>
+  <id>http://stevenfarlie.github.io/</id>
+  <author>
+    <name><![CDATA[Steven Farlie]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Git Next: Rebases and Merges]]></title>
+    <link href="http://stevenfarlie.github.io/blog/2014/03/21/git-next-rebases-and-merges/"/>
+    <updated>2014-03-21T10:21:25+11:00</updated>
+    <id>http://stevenfarlie.github.io/blog/2014/03/21/git-next-rebases-and-merges</id>
+    <content type="html"><![CDATA[<p>It&rsquo;s been a crazy ride for Git over the past six years. Without a doubt it is the number one source control system in the open source world. That would have seemed pretty crazy back in the day, considering almost no developers wanted to deal with branches and how utterly confounding the command line interface seems to be.</p>
+
+<p>I am fortunate to experience most of the spectrum of Git users, thanks to both professional work in Ruby and volunteering at OpenTechSchool. Getting users up and running is relatively straight-forward. In an hour or two most can clone, add, commit, push and pull. It helps immensely that the <code>gitk</code> program is shipped with most git installations. It allows a graphical view of the entire history of the repository.</p>
+
+<p><img src="/images/posts/2014-04-21/gitk-01.png"></p>
+
+<p>There are a few posts about what to do next, of various levels of expertise, and a good one just posted by Peter Hutterer which has <a href="http://who-t.blogspot.com.au/2014/03/using-git-next-level.html">some neat tips</a>. I thought I would bring it back to the very, very next step: formatting your commits for others.</p>
+
+<p>This is actually the biggest step you can make it your git know-how. Running your own local repo is great for easy backups and deployments but eventually most of us will have to interact with others.</p>
+
+<h2>He said, she said git repos.</h2>
+
+<p>Something not often mentioned is what a git commit <em>means</em>. Everyone knows what a git commit <em>is</em>, a set of changes to some files, but what it <em>means</em> comes into play when dealing with others. Yes, you made some changes to some files, but should it be in a single commit, or three? Take the following example, where a programmer added a new web page in a TDD-style, running <code>git commit</code> to save their progress:</p>
+
+<ul>
+<li><code>added tests for the new page</code></li>
+<li><code>new page</code></li>
+<li><code>fix test</code></li>
+<li><code>more tests</code></li>
+<li><code>reformat page</code></li>
+<li><code>new copy from Simon</code></li>
+<li><code>fixed tests</code></li>
+</ul>
+
+
+<p>If this was your own repository it wouldn&rsquo;t be a problem. However share a repository with five or fifty other programmers and this can be real issue. Compare it to slightly more experienced git user:</p>
+
+<ul>
+<li><code>Added 'About Us' page</code></li>
+</ul>
+
+
+<p>Much much easier to understand what is going on at a glance.</p>
+
+<h2>Cleaning up your changes</h2>
+
+<p>Let&rsquo;s say you have the first version of that branch, with seven commits that could be rolled up into one. There are a few different ways to roll up your commits.</p>
+
+<h3>git diff and apply</h3>
+
+<p>The <code>git diff</code> command is a nifty way to bypass the repository history by exporting all changes as a text file (called a <em>patch</em>). When you look at the differences in gitk it is actually the output of <code>git diff</code>. Giving it a range of commits will cause it to &ldquo;roll-up&rdquo; all changes into a single patch file.</p>
+
+<p>``` diff
+$ git diff origin/master&hellip;master
+diff &mdash;git a/grep_calendar.rb b/grep_calendar.rb
+index 7d2c4f9..8ec74dc 100644
+&mdash;&ndash; a/grep_calendar.rb
++++ b/grep_calendar.rb
+@@ -10,7 +10,7 @@ class GrepCalendar &lt; Sinatra::Base
+   include Icalendar</p>
+
+<p>   set :public_folder, File.dirname(<strong>FILE</strong>) + &lsquo;/public&rsquo;
+&ndash;  set :show_exceptions, false
++  set :show_exceptions, true</p>
+
+<p>   get &lsquo;/&rsquo; do</p>
+
+<pre><code> redirect '/index.html'
+</code></pre>
+
+<p>```</p>
+
+<p>In this case I use <code>origin/master...master</code> to say &ldquo;all changes I have made to master in my repo&rdquo;. Using a shell redirect you can save these changes to a file:</p>
+
+<p><code>sh
+$ git diff origin/master...master &gt; my-changes.patch
+</code></p>
+
+<p>Now we can pretend that we did it all in a single commit from the first place using the git apply command:</p>
+
+<p>``` sh
+$ git reset &mdash;hard origin/master # discard all changes to master
+HEAD is now at 90580de random commit message
+$ git apply &mdash;3way my-changes.patch # apply my patch file
+$ git status</p>
+
+<h1>On branch master</h1>
+
+<h1>Changes to be committed:</h1>
+
+<h1>(use &ldquo;git reset HEAD <file>&hellip;&rdquo; to unstage)</h1>
+
+<p>#</p>
+
+<h1>modified:   grep_calendar.rb</h1>
+
+<p>```</p>
+
+<p>Now you are free to build your <code>git commit</code> and continue. Generally speaking a <code>git reset --hard</code> is a very dangerous command. If you start your work in a branch, however, you would only need to <code>git checkout master</code> to apply your changes fresh to master, leaving the branch behind.</p>
+
+<h3>git rebase -i</h3>
+
+<p>The slightly more intimidating process is the <em>interactive rebase</em>, commonly known as &ldquo;OMG WTF AM I DOING EVERYTHING IS GOING TO DIE!!!!&rdquo;</p>
+
+<p>It&rsquo;s not that bad! Basically, <code>git rebase -i</code> replays your changes from a particular point in time.</p>
+
+<p>``` sh
+$ git rebase -i origin/master
+pick a6db047 Show all exceptions
+pick c823c44 fix tests
+pick c6f4926 really fix the tests</p>
+
+<h1>Rebase 90580de..c6f4926 onto 90580de</h1>
+
+<p>#</p>
+
+<h1>Commands:</h1>
+
+<h1>p, pick = use commit</h1>
+
+<h1>r, reword = use commit, but edit the commit message</h1>
+
+<h1>e, edit = use commit, but stop for amending</h1>
+
+<h1>s, squash = use commit, but meld into previous commit</h1>
+
+<h1>f, fixup = like &ldquo;squash&rdquo;, but discard this commit&rsquo;s log message</h1>
+
+<h1>x, exec = run command (the rest of the line) using shell</h1>
+
+<p>#</p>
+
+<h1>These lines can be re-ordered; they are executed from top to bottom.</h1>
+
+<p>#</p>
+
+<h1>If you remove a line here THAT COMMIT WILL BE LOST.</h1>
+
+<p>#</p>
+
+<h1>However, if you remove everything, the rebase will be aborted.</h1>
+
+<p>#</p>
+
+<h1>Note that empty commits are commented out</h1>
+
+<p>```</p>
+
+<p>The trickiest part for many seems to be using the text editor! If you are in Vim, press <code>i</code> to turn on &ldquo;Insert mode&rdquo; (where it acts like a normal editor).</p>
+
+<p>The top of the file contains all the commits that will be replayed, and the bottom explains all the things you can do to them. Leave the first one as <code>pick</code>, and change all the others from <code>pick</code> to <code>squash</code>. This tells git that we want it to roll all the commits together.</p>
+
+<p>When you are done, press the ESC key and then type <code>:wq</code> to save the changes and exit. Git will now replay the commits. When it has finished it will return you to an editor to edit the commit message for all the rolled-up commits.</p>
+
+<p>``` sh</p>
+
+<h1>This is a combination of 3 commits.</h1>
+
+<h1>The first commit&rsquo;s message is:</h1>
+
+<p>Show all exceptions</p>
+
+<h1>This is the 2nd commit message:</h1>
+
+<p>fix tests</p>
+
+<h1>This is the 3rd commit message:</h1>
+
+<p>really fix the tests</p>
+
+<h1>Please enter the commit message for your changes. Lines starting</h1>
+
+<h1>with &lsquo;#&rsquo; will be ignored, and an empty message aborts the commit.</h1>
+
+<h1>Not currently on any branch.</h1>
+
+<h1>You are currently editing a commit during a rebase.</h1>
+
+<p>#</p>
+
+<h1>Changes to be committed:</h1>
+
+<h1>(use &ldquo;git reset HEAD<sup>1</sup> <file>&hellip;&rdquo; to unstage)</h1>
+
+<p>#</p>
+
+<h1>modified:   grep_calendar.rb</h1>
+
+<p>#</p>
+
+<h1>Untracked files:</h1>
+
+<h1>(use &ldquo;git add <file>&hellip;&rdquo; to include in what will be committed)</h1>
+
+<p>#</p>
+
+<h1>my-changes.patch</h1>
+
+<p>```</p>
+
+<p>Once again, press <code>i</code> to turn on Insert mode, make all your changes and then press the ESC key and type <code>:wq</code> to quit.</p>
+
+<p>Take a look at your repository with gitk. You can see that the commits are gone and replaced with a single rolled-up commit. Now you are ready to show they world your interesting and insightful code changes :)</p>
+
+<h3>diff or rebase?</h3>
+
+<p>The end result is the same, so often it does not matter which method you use. A rebase takes fewer steps, but a diff keeps a patch file around which can feel like a bit of a security blanket.</p>
+
+<p>There is one exception though, and that is when a branch has grown to monstrous proportions. Sometimes they will have 15 or 30 commits, with many conflicts, rewrites and merges all over the place. In these cases a patch file can be easier to understand and a good &lsquo;get out of jail free&rsquo; card.</p>
+
+<p>Now, show us all your lovely formatted git commits!</p>
+]]></content>
+  </entry>
+  
+</feed>
