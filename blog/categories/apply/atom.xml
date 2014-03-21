@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Git | Steven Farlie's Blog]]></title>
-  <link href="http://stevenfarlie.github.io/blog/categories/git/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Apply | Steven Farlie's Blog]]></title>
+  <link href="http://stevenfarlie.github.io/blog/categories/apply/atom.xml" rel="self"/>
   <link href="http://stevenfarlie.github.io/"/>
   <updated>2014-03-21T11:40:55+11:00</updated>
   <id>http://stevenfarlie.github.io/</id>

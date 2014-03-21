@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Rebase | Steven Farlie's Blog]]></title>
   <link href="http://stevenfarlie.github.io/blog/categories/rebase/atom.xml" rel="self"/>
   <link href="http://stevenfarlie.github.io/"/>
-  <updated>2014-03-21T11:39:11+11:00</updated>
+  <updated>2014-03-21T11:40:55+11:00</updated>
   <id>http://stevenfarlie.github.io/</id>
   <author>
     <name><![CDATA[Steven Farlie]]></name>
@@ -14,10 +14,10 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Git Next: Rebases and Merges]]></title>
-    <link href="http://stevenfarlie.github.io/blog/2014/03/21/git-next-rebases-and-merges/"/>
+    <title type="html"><![CDATA[Git Next: Commit Formatting]]></title>
+    <link href="http://stevenfarlie.github.io/blog/2014/03/21/git-next-commit-formatting/"/>
     <updated>2014-03-21T10:21:25+11:00</updated>
-    <id>http://stevenfarlie.github.io/blog/2014/03/21/git-next-rebases-and-merges</id>
+    <id>http://stevenfarlie.github.io/blog/2014/03/21/git-next-commit-formatting</id>
     <content type="html"><![CDATA[<p>It&rsquo;s been a crazy ride for Git over the past six years. Without a doubt it is the number one source control system in the open source world. That would have seemed pretty crazy back in the day, considering almost no developers wanted to deal with branches and how utterly confounding the command line interface seems to be.</p>
 
 <p>I am fortunate to experience most of the spectrum of Git users, thanks to both professional work in Ruby and volunteering at OpenTechSchool. Getting users up and running is relatively straight-forward. In an hour or two most can clone, add, commit, push and pull. It helps immensely that the <code>gitk</code> program is shipped with most git installations. It allows a graphical view of the entire history of the repository.</p>
