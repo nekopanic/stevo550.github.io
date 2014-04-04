@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Rubygems | Steven Farlie's Blog]]></title>
+  <link href="http://stevenfarlie.github.io/blog/categories/rubygems/atom.xml" rel="self"/>
+  <link href="http://stevenfarlie.github.io/"/>
+  <updated>2014-04-04T15:06:05+11:00</updated>
+  <id>http://stevenfarlie.github.io/</id>
+  <author>
+    <name><![CDATA[Steven Farlie]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Managing Gem Versions With Bundler]]></title>
+    <link href="http://stevenfarlie.github.io/blog/2014/04/04/managing-gem-versions-with-bundler/"/>
+    <updated>2014-04-04T14:03:17+11:00</updated>
+    <id>http://stevenfarlie.github.io/blog/2014/04/04/managing-gem-versions-with-bundler</id>
+    <content type="html"><![CDATA[<p>One of the common refrains for new Rubyists is &ldquo;How do I organise my Gemfile?&rdquo;.</p>
+
+<p>The answer usually given is &ldquo;put in all your gem dependencies&rdquo; but that is a little simplistic. When teaching Ruby I usually find that the Gemfile is very easy for people to understand. The syntax is quite clean and straight-forward. That is, until you start dealing with gem versions and gem groups.</p>
+
+<p>Let&rsquo;s start with the most common &lsquo;first Gemfile&rsquo; scenario: the stock Rails Gemfile (I have edited this to remove the comments and commented-out gems):</p>
+
+<p>``` ruby</p>
+
+<p>source &lsquo;<a href="https://rubygems.org">https://rubygems.org</a>&rsquo;</p>
+
+<p>gem &lsquo;rails&rsquo;, &lsquo;4.0.4&rsquo;
+gem &lsquo;sqlite3&rsquo;
+gem &lsquo;sass-rails&rsquo;, &lsquo;~> 4.0.2&rsquo;
+gem &lsquo;uglifier&rsquo;, &lsquo;>= 1.3.0&rsquo;
+gem &lsquo;coffee-rails&rsquo;, &lsquo;~> 4.0.0&rsquo;
+gem &lsquo;jquery-rails&rsquo;
+gem &lsquo;turbolinks&rsquo;
+gem &lsquo;jbuilder&rsquo;, &lsquo;~> 1.2&rsquo;</p>
+
+<p>group :doc do
+  gem &lsquo;sdoc&rsquo;, require: false
+end
+```</p>
+
+<h2>Gemfile vs Gemfile.lock</h2>
+
+<p>It sounds unintuitive, but the Gemfile doesn&rsquo;t actually determine which gems your application will use. After <code>bundle</code> or <code>bundle install</code> is run, the Gemfile.lock file is created. This lock file determines the exact version of every gem your application will use. Not just the gems listed in Gemfile, but all the gems that they depend on as well.</p>
+
+<p>This file is a bit larger, so I&rsquo;ll just show the start of the Gemfile.lock that was generated for the Rails example:</p>
+
+<p>``` ruby
+GEM
+  remote: <a href="https://rubygems.org/">https://rubygems.org/</a>
+  specs:</p>
+
+<pre><code>actionmailer (4.0.4)
+  actionpack (= 4.0.4)
+  mail (~&gt; 2.5.4)
+actionpack (4.0.4)
+  activesupport (= 4.0.4)
+  builder (~&gt; 3.1.0)
+  erubis (~&gt; 2.7.0)
+  rack (~&gt; 1.5.2)
+  rack-test (~&gt; 0.6.2)
+</code></pre>
+
+<p>&hellip;
+```</p>
+
+<p>This specifies that <code>actionmailer</code> version 4.0.4 is used, as well as <code>actionpack</code> version 4.0.4. Every production and test server, every developer or CI environment will all use the exact gems specified in Gemfile.lock. It&rsquo;s a great solution to the problem of keeping every environment in sync with their gem versions.</p>
+
+<p>So if Gemfile.lock specifies which gems your application uses, then what is the point of using Gemfile?</p>
+
+<h2>bundle update and gem versions</h2>
+
+<p>Gemfile&rsquo;s purpose is as a tool to manage your Gemfile.lock. With the <code>bundle update</code> command you can ask Bundler to regenerate the Gemfile.lock file. This is something that has to be done manually, ideally periodically, by someone with a good idea of how the whole app fits together.</p>
+
+<p>The key to managing <code>bundle update</code> is to specify not the gem version that you develop against, but the gem version <em>you think should be compatible</em>. This means that when it comes time to <code>bundle update</code> the whole process should be relatively painless.</p>
+
+<p>The two key concepts to manage gem versions is <a href="http://semver.org/">Semantic Versioning</a> and the <a href="http://robots.thoughtbot.com/rubys-pessimistic-operator">~> operator</a>. Take a moment to read up on both if you aren&rsquo;t familiar with them, because it&rsquo;s time to get real on that Gemfile.</p>
+
+<h2>Gemfile revisited</h2>
+
+<p>I don&rsquo;t like the stock Rails Gemfile. Aside from the fact that it doesn&rsquo;t work out of the box (the infamous &ldquo;Could not find a JavaScript runtime.&rdquo;), the version specifiers are all over the place. Let&rsquo;s lay down a few entirely arbitrary and made up ground rules:</p>
+
+<ul>
+<li>Big gems with lots of code can have unexpected bugs after releases. Things become hairy if your entire application is based off of it. So if you lack confidence in a particular library then the patch level is more appropriate: &ldquo;~> MAJOR.MINOR.PATCH&rdquo;, e.g. &ldquo;~> 2.4.1&rdquo;.</li>
+<li>Regular gems that use semantic versioning are usually fine for MINOR versions, e.g. &ldquo;~> 2.4&rdquo;.</li>
+<li>Gems used purely for debugging, development or testing do not affect production code, so limiting their version usually holds the project back. You can leave these without a version, so Bundler will always pick up the latest when you update.</li>
+</ul>
+
+
+<p>With that in mind let&rsquo;s have a stab at the Rails Gemfile:</p>
+
+<p>``` ruby
+source &lsquo;<a href="https://rubygems.org">https://rubygems.org</a>&rsquo;</p>
+
+<p>gem &lsquo;rails&rsquo;, &lsquo;~> 4.0&rsquo;
+gem &lsquo;sass-rails&rsquo;, &lsquo;~> 4.0&rsquo;
+gem &lsquo;coffee-rails&rsquo;, &lsquo;~> 4.0&rsquo;
+gem &lsquo;jquery-rails&rsquo;, &lsquo;~> 3.1&rsquo;
+gem &lsquo;turbolinks&rsquo;, &lsquo;~> 2.2&rsquo;
+gem &lsquo;jbuilder&rsquo;, &lsquo;~> 1.2&rsquo;</p>
+
+<p>gem &lsquo;uglifier&rsquo;
+gem &lsquo;sqlite3&rsquo;</p>
+
+<p>group :doc do
+  gem &lsquo;sdoc&rsquo;, require: false
+end
+```</p>
+
+<p>A lot of these changes are judgement calls, but so long as you keep Gemfile.lock it is actually not much of an issue. Here are a few of the things I was thinking when making these changes:</p>
+
+<ul>
+<li>Rails is a big, complicated gem. But at the start of a project the codebase is usually quite small, with good test coverage and not many features. Sticking to MINOR version compatibility seems reasonable. If the application had 150 controllers and 400 models I would probably choose PATCH versions.</li>
+<li>The &lsquo;uglifier&rsquo; and &lsquo;sqlite3&rsquo; gems are usually only used in development and testing, so I would allow any version. Similarly I left &lsquo;sdoc&rsquo; unversioned.</li>
+</ul>
+
+
+<p>That&rsquo;s it for now. Thanks for reading this far and best of luck taming your Gemfile! :)</p>
+]]></content>
+  </entry>
+  
+</feed>
