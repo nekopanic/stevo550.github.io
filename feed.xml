@@ -4,7 +4,7 @@
   <title><![CDATA[Steven Farlie's Blog]]></title>
   <link href="http://stevenfarlie.github.io/atom.xml" rel="self"/>
   <link href="http://stevenfarlie.github.io/"/>
-  <updated>2014-04-04T15:06:05+11:00</updated>
+  <updated>2014-04-11T11:31:34+10:00</updated>
   <id>http://stevenfarlie.github.io/</id>
   <author>
     <name><![CDATA[Steven Farlie]]></name>
@@ -12,6 +12,65 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Charcoal Chicken With BBQ Marinade]]></title>
+    <link href="http://stevenfarlie.github.io/blog/2014/04/11/charcoal-chicken-with-bbq-marinade/"/>
+    <updated>2014-04-11T11:14:18+10:00</updated>
+    <id>http://stevenfarlie.github.io/blog/2014/04/11/charcoal-chicken-with-bbq-marinade</id>
+    <content type="html"><![CDATA[<p>And now for something completely different.</p>
+
+<p>In keeping with my general forgetfulness, I left a bag full of chicken wings and drummettes in the fridge at work. Rather than letting them go to waste I have decided to post the recipe of what I planned to do with them. Hopefully this will inspire my workmates to do justice to them.</p>
+
+<p>A proper charcoal chicken is a long process, taking about three days. First you brine the chicken (first day), then marinade (second day) and cook (third day). Here is what you need to make three liters of brine:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>3l of water
+</span><span class='line'>170g of salt
+</span><span class='line'>135g of sugar
+</span><span class='line'>180ml of cheap soy sauce
+</span><span class='line'>60ml of olive oil</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I find it easiest to have a container with 2l of water in it, then mix all the ingredients with 1l of boiling water. That should be enough to dissolve all the salt and sugar quickly. Then add it to the container. Generally 1 liter of brine works with 1 kilogram of chicken. Soak the chicken in the brine, cover and leave in the refridgerator for a day.</p>
+
+<p>The idea behind brining is that it helps tenderise the chicken and preventing it from drying out while cooking. In reality, buying good quality chicken is enough, so the brining really just adds salt. Which is good, because yum!</p>
+
+<p>Next comes the marinade.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>1/2 cup tomato sauce
+</span><span class='line'>1/4 cup worchester sauce
+</span><span class='line'>1/4 cup brown sugar
+</span><span class='line'>2 tbs apple cider vinegar
+</span><span class='line'>1 tbs dijon mustard
+</span><span class='line'>3 tsp smoked paprika
+</span><span class='line'>1 tsp dried oregano
+</span><span class='line'>1 tsp ground cumin</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Bring it all together in a pot and let it simmer for about five minutes to get all the flavours mixed up.</p>
+
+<p>Drain and rinse the chicken, then cover with about half of the marinade. Cover and keep refrigerated for a day.</p>
+
+<p>Now it&rsquo;s time for cooking! This is the trickiest part. Working a charcoal grill can be pretty difficult, and I don&rsquo;t think I can adequately do it justice here. However this chicken will practically cook itself. If you don&rsquo;t have a charcoal BBQ then I guess an oven will do. So let&rsquo;s say oven bake at 180 degrees for half and hour. Use the leftover marinade to brush the chicken as it dries out while cooking.</p>
+
+<p>Your end result will be a great big pile of yummy chicken. It can usually last in the fridge for two weeks. Much longer than most cooked meats, probably because of the brining.</p>
+
+<p>Enjoy!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Managing Gem Versions With Bundler]]></title>
