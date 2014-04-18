@@ -43,19 +43,23 @@
         <lastmod>2014-04-11T11:30:43+10:00</lastmod>
     </url>
     <url>
-        <loc>http://stevenfarlie.github.io/feed.xml</loc>
-        <lastmod>2013-12-20T17:53:49+11:00</lastmod>
-    </url>
-    <url>
-        <loc>http://stevenfarlie.github.io/blog/archives/</loc>
-        <lastmod>2014-04-11T11:30:43+10:00</lastmod>
+        <loc>http://stevenfarlie.github.io/blog/2014/04/18/good-friday/</loc>
+        <lastmod>2014-04-18T18:53:39+10:00</lastmod>
     </url>
     <url>
         <loc>http://stevenfarlie.github.io/robots.txt</loc>
         <lastmod>2013-12-20T17:53:49+11:00</lastmod>
     </url>
     <url>
+        <loc>http://stevenfarlie.github.io/blog/archives/</loc>
+        <lastmod>2014-04-18T18:53:39+10:00</lastmod>
+    </url>
+    <url>
+        <loc>http://stevenfarlie.github.io/feed.xml</loc>
+        <lastmod>2013-12-20T17:53:49+11:00</lastmod>
+    </url>
+    <url>
         <loc>http://stevenfarlie.github.io/</loc>
-        <lastmod>2014-04-11T11:30:43+10:00</lastmod>
+        <lastmod>2014-04-18T18:53:39+10:00</lastmod>
     </url>
 </urlset>

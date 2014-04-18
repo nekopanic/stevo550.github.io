@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | Steven Farlie's Blog]]></title>
   <link href="http://stevenfarlie.github.io/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://stevenfarlie.github.io/"/>
-  <updated>2014-04-11T11:31:34+10:00</updated>
+  <updated>2014-04-18T18:54:46+10:00</updated>
   <id>http://stevenfarlie.github.io/</id>
   <author>
     <name><![CDATA[Steven Farlie]]></name>
@@ -12,6 +12,29 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Good Friday]]></title>
+    <link href="http://stevenfarlie.github.io/blog/2014/04/18/good-friday/"/>
+    <updated>2014-04-18T18:19:16+10:00</updated>
+    <id>http://stevenfarlie.github.io/blog/2014/04/18/good-friday</id>
+    <content type="html"><![CDATA[<p>It&rsquo;s Easter time, and there is no better way to spend a little downtime than by formatting your computer and installing the latest Ubuntu release. Everyone is with me on that, right? Right?</p>
+
+<p>Anyway, it&rsquo;s 14.04 LTS this time, the first long-term-support release in two years. Specifically, I&rsquo;ve switched to the Xubuntu variant, which uses XFCE as the desktop environment and not Unity.</p>
+
+<p>Overall I am very impressed with the cut and polish of XFCE in Xubuntu. It&rsquo;s shiny, configurable and provides just enough functionality to allow any sane developer to set up a decent workflow. It&rsquo;s theWindows 7 of the Linux world (lol).</p>
+
+<p>This also comes with a few changes to my normal apps. The main one being that I am back on Firefox. Even though I prefer Chrome for many things, they make strange user interface decisions like warning about developer mode every time you start, or confirming downloads for &ldquo;dangerous files&rdquo;. I get the feeling that Firefox is a little more on my side.</p>
+
+<p>One thing you might have an issue with is compiling Ruby on 14.04. This is because there are some new versions of libraries that Ruby relies on and they haven&rsquo;t managed to put out a release to handle them just yet. If, like me, you use <code>rbenv</code> for all your Ruby goodness then you can use this <a href="https://github.com/sstephenson/ruby-build/issues/526">helpful patch</a>.</p>
+
+<p>Seeing as I was busy formatting hard drives I took the opportunity to buy a new backup disk. Now I have replaced BANANABOAT with a 1TB portable hard-drive called LUMPYSPACE. As before, it&rsquo;s entirely encrypted, so it doesn&rsquo;t matter if I lose it somewhere or somebody nicks it.</p>
+
+<p>Then for good luck I reworked all my major passwords for everything I could think of. New disk crypto passwords, all the major services and two-factor auth where possible. It was such a pain. Many sites do not validate for maximum password in the browser, and some (like Steam), accept a password on one interface and will not let you log in on others. The most infuriating seems to be GitHub at the moment, which seems to allow my password on web, but not git+ssh. Fortunately I use SSH keys. But it is super annoying.</p>
+
+<p>Anyhow, everything seems to be settling down. Though nobody has reported account breaches from Heartbleed, I would recommend taking the opportunity to change your passwords. It feels much better to have a password manager (like KeepassX) and 32+ character passwords.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[That One Weird Difference Between {} and Do-end in Ruby]]></title>
