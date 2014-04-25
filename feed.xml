@@ -4,7 +4,7 @@
   <title><![CDATA[Steven Farlie's Blog]]></title>
   <link href="http://stevenfarlie.github.io/atom.xml" rel="self"/>
   <link href="http://stevenfarlie.github.io/"/>
-  <updated>2014-04-18T18:56:10+10:00</updated>
+  <updated>2014-04-25T15:47:15+10:00</updated>
   <id>http://stevenfarlie.github.io/</id>
   <author>
     <name><![CDATA[Steven Farlie]]></name>
@@ -12,6 +12,257 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[RSpec Next Steps: Example Metadata]]></title>
+    <link href="http://stevenfarlie.github.io/blog/2014/04/25/rspec-next-steps-example-metadata/"/>
+    <updated>2014-04-25T15:36:00+10:00</updated>
+    <id>http://stevenfarlie.github.io/blog/2014/04/25/rspec-next-steps-example-metadata</id>
+    <content type="html"><![CDATA[<p>One of my favourite Ruby gems <a href="http://rspec.info/">RSpec</a>, the testing library. Coming from JUnit and derived test suites it was a real breath of fresh air. It&rsquo;s syntax is a real winner:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Numeric</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">describe</span> <span class="s1">&#39;+num&#39;</span> <span class="k">do</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">it</span> <span class="s1">&#39;adds two positive integers&#39;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">expect</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">eq</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">it</span> <span class="s1">&#39;adds zero to a positive integer&#39;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">expect</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">eq</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is a trivial example, but you would be surprised how many new developers understand this over a more traditional JUnit style. Even though it doesn&rsquo;t <em>look</em> like a Ruby file most seem to understand RSpec almost intuitively. It&rsquo;s almost as though RSpec is a magic black box that just runs your examples.</p>
+
+<p>But sometimes I need to take a look under the hood, and that is where <a href="http://rubydoc.info/gems/rspec-core/file/README.md#metadata">example metadata</a> comes into play. Example metadata is a Hash available within your <code>it</code> block. It contains a lot of information about the current example that is running. It is simple enough to find, just put <code>example.metadata</code> inside your test.</p>
+
+<p>This is what a typical metadata Hash looks like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="p">{</span><span class="ss">:example_group</span><span class="o">=&gt;</span>
+</span><span class='line'>  <span class="p">{</span><span class="ss">:example_group</span><span class="o">=&gt;</span>
+</span><span class='line'>    <span class="p">{</span><span class="ss">:description_args</span><span class="o">=&gt;[</span><span class="no">Numeric</span><span class="o">]</span><span class="p">,</span>
+</span><span class='line'>     <span class="ss">:caller</span><span class="o">=&gt;</span>
+</span><span class='line'>      <span class="o">[</span><span class="s2">&quot;/home/swf/.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/rspec-core-2.14.8/lib/rspec/core/example_group.rb:300:in `set_it_up&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>       <span class="s2">&quot;/home/swf/.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/rspec-core-2.14.8/lib/rspec/core/example_group.rb:245:in `subclass&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>       <span class="s2">&quot;/home/swf/.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/rspec-core-2.14.8/lib/rspec/core/example_group.rb:232:in `describe&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>       <span class="s2">&quot;/home/swf/.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/rspec-core-2.14.8/lib/rspec/core/dsl.rb:18:in `describe&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>       <span class="s2">&quot;/home/swf/dev/blogderp/spec/unit/numeric_spec.rb:1:in `&lt;top (required)&gt;&#39;&quot;</span><span class="o">]</span><span class="p">},</span>
+</span><span class='line'>   <span class="ss">:description_args</span><span class="o">=&gt;[</span><span class="s2">&quot;+num&quot;</span><span class="o">]</span><span class="p">,</span>
+</span><span class='line'>   <span class="ss">:caller</span><span class="o">=&gt;</span>
+</span><span class='line'>    <span class="o">[</span><span class="s2">&quot;/home/swf/.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/rspec-core-2.14.8/lib/rspec/core/example_group.rb:300:in `set_it_up&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>     <span class="s2">&quot;/home/swf/.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/rspec-core-2.14.8/lib/rspec/core/example_group.rb:245:in `subclass&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>     <span class="s2">&quot;/home/swf/.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/rspec-core-2.14.8/lib/rspec/core/example_group.rb:232:in `describe&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>     <span class="s2">&quot;/home/swf/dev/blogderp/spec/unit/numeric_spec.rb:3:in `block in &lt;top (required)&gt;&#39;&quot;</span><span class="o">]</span><span class="p">},</span>
+</span><span class='line'> <span class="ss">:example_group_block</span><span class="o">=&gt;</span>
+</span><span class='line'>  <span class="c1">#&lt;Proc:0x007f5d0d211f58@/home/swf/dev/blogderp/spec/unit/numeric_spec.rb:3&gt;,</span>
+</span><span class='line'> <span class="ss">:description_args</span><span class="o">=&gt;[</span><span class="s2">&quot;adds zero to a positive integer&quot;</span><span class="o">]</span><span class="p">,</span>
+</span><span class='line'> <span class="ss">:caller</span><span class="o">=&gt;</span>
+</span><span class='line'>  <span class="o">[</span><span class="s2">&quot;/home/swf/.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/rspec-core-2.14.8/lib/rspec/core/metadata.rb:187:in `for_example&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>   <span class="s2">&quot;/home/swf/.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/rspec-core-2.14.8/lib/rspec/core/example.rb:81:in `initialize&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>   <span class="s2">&quot;/home/swf/.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/rspec-core-2.14.8/lib/rspec/core/example_group.rb:66:in `new&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>   <span class="s2">&quot;/home/swf/.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/rspec-core-2.14.8/lib/rspec/core/example_group.rb:66:in `it&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>   <span class="s2">&quot;/home/swf/dev/blogderp/spec/unit/numeric_spec.rb:9:in `block (2 levels) in &lt;top (required)&gt;&#39;&quot;</span><span class="o">]</span><span class="p">,</span>
+</span><span class='line'> <span class="ss">:execution_result</span><span class="o">=&gt;</span><span class="p">{</span><span class="ss">:started_at</span><span class="o">=&gt;</span><span class="mi">2014</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">25</span> <span class="mi">15</span><span class="p">:</span><span class="mi">16</span><span class="p">:</span><span class="mi">56</span> <span class="o">+</span><span class="mi">1000</span><span class="p">}}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It might not look like much. You can actually get a lot of these things directly from the <code>example</code> object, like <code>example.full_description</code> which has the complete test description or <code>example.location</code> which contains the file name and line number for the test.</p>
+
+<p>But let&rsquo;s see what happens with tags. Let&rsquo;s pretend our test suite has grown dramatically, and one of the specs has become notorious for failing sporadically and requiring tons of developer time to fix up. We&rsquo;ll add a <code>times_fixed</code> tag to say how many times the spec has been fixed and <code>hours_wasted</code> to say long we have spent on it:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Numeric</span> <span class="k">do</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">describe</span> <span class="s1">&#39;+num&#39;</span> <span class="k">do</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">it</span> <span class="s1">&#39;adds two positive integers&#39;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">expect</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">eq</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">it</span> <span class="s1">&#39;adds zero to a positive integer&#39;</span><span class="p">,</span> <span class="n">times_fixed</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span> <span class="n">hours_wasted</span><span class="p">:</span> <span class="mi">930</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">expect</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">eq</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now where can we find this tag data at runtime? In <code>example.metadata</code>, of course:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="p">{</span><span class="ss">:example_group</span><span class="o">=&gt;</span>
+</span><span class='line'>  <span class="p">{</span><span class="ss">:example_group</span><span class="o">=&gt;</span>
+</span><span class='line'>    <span class="p">{</span><span class="ss">:description_args</span><span class="o">=&gt;[</span><span class="no">Numeric</span><span class="o">]</span><span class="p">,</span>
+</span><span class='line'>     <span class="ss">:caller</span><span class="o">=&gt;</span>
+</span><span class='line'>      <span class="o">[</span><span class="s2">&quot;/home/swf/.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/rspec-core-2.14.8/lib/rspec/core/example_group.rb:300:in `set_it_up&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>       <span class="s2">&quot;/home/swf/.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/rspec-core-2.14.8/lib/rspec/core/example_group.rb:245:in `subclass&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>       <span class="s2">&quot;/home/swf/.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/rspec-core-2.14.8/lib/rspec/core/example_group.rb:232:in `describe&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>       <span class="s2">&quot;/home/swf/.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/rspec-core-2.14.8/lib/rspec/core/dsl.rb:18:in `describe&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>       <span class="s2">&quot;/home/swf/dev/blogderp/spec/unit/numeric_spec.rb:1:in `&lt;top (required)&gt;&#39;&quot;</span><span class="o">]</span><span class="p">},</span>
+</span><span class='line'>   <span class="ss">:description_args</span><span class="o">=&gt;[</span><span class="s2">&quot;+num&quot;</span><span class="o">]</span><span class="p">,</span>
+</span><span class='line'>   <span class="ss">:caller</span><span class="o">=&gt;</span>
+</span><span class='line'>    <span class="o">[</span><span class="s2">&quot;/home/swf/.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/rspec-core-2.14.8/lib/rspec/core/example_group.rb:300:in `set_it_up&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>     <span class="s2">&quot;/home/swf/.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/rspec-core-2.14.8/lib/rspec/core/example_group.rb:245:in `subclass&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>     <span class="s2">&quot;/home/swf/.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/rspec-core-2.14.8/lib/rspec/core/example_group.rb:232:in `describe&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>     <span class="s2">&quot;/home/swf/dev/blogderp/spec/unit/numeric_spec.rb:3:in `block in &lt;top (required)&gt;&#39;&quot;</span><span class="o">]</span><span class="p">},</span>
+</span><span class='line'> <span class="ss">:example_group_block</span><span class="o">=&gt;</span>
+</span><span class='line'>  <span class="c1">#&lt;Proc:0x007f5d0d211f58@/home/swf/dev/blogderp/spec/unit/numeric_spec.rb:3&gt;,</span>
+</span><span class='line'> <span class="ss">:description_args</span><span class="o">=&gt;[</span><span class="s2">&quot;adds zero to a positive integer&quot;</span><span class="o">]</span><span class="p">,</span>
+</span><span class='line'> <span class="ss">:caller</span><span class="o">=&gt;</span>
+</span><span class='line'>  <span class="o">[</span><span class="s2">&quot;/home/swf/.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/rspec-core-2.14.8/lib/rspec/core/metadata.rb:187:in `for_example&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>   <span class="s2">&quot;/home/swf/.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/rspec-core-2.14.8/lib/rspec/core/example.rb:81:in `initialize&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>   <span class="s2">&quot;/home/swf/.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/rspec-core-2.14.8/lib/rspec/core/example_group.rb:66:in `new&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>   <span class="s2">&quot;/home/swf/.rbenv/versions/2.1.1/lib/ruby/gems/2.1.0/gems/rspec-core-2.14.8/lib/rspec/core/example_group.rb:66:in `it&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>   <span class="s2">&quot;/home/swf/dev/blogderp/spec/unit/numeric_spec.rb:9:in `block (2 levels) in &lt;top (required)&gt;&#39;&quot;</span><span class="o">]</span><span class="p">,</span>
+</span><span class='line'> <span class="ss">:times_fixed</span><span class="o">=&gt;</span><span class="mi">13</span><span class="p">,</span>
+</span><span class='line'> <span class="ss">:hours_wasted</span><span class="o">=&gt;</span><span class="mi">930</span><span class="p">,</span>
+</span><span class='line'> <span class="ss">:execution_result</span><span class="o">=&gt;</span><span class="p">{</span><span class="ss">:started_at</span><span class="o">=&gt;</span><span class="mi">2014</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">25</span> <span class="mi">15</span><span class="p">:</span><span class="mi">16</span><span class="p">:</span><span class="mi">56</span> <span class="o">+</span><span class="mi">1000</span><span class="p">}}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now we can vent our frustration! Let&rsquo;s add up all the hours wasted in a <a href="http://rubydoc.info/gems/rspec-core/RSpec/Core/Formatters">custom RSpec formatter</a>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;rspec/core/formatters/base_text_formatter&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">HoursWastedFormatter</span> <span class="o">&lt;</span> <span class="ss">RSpec</span><span class="p">:</span><span class="ss">:Core</span><span class="o">::</span><span class="ss">Formatters</span><span class="p">:</span><span class="ss">:BaseTextFormatter</span>
+</span><span class='line'>
+</span><span class='line'> <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="n">expected_example_count</span><span class="p">)</span>
+</span><span class='line'>   <span class="vi">@hours_wasted</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span class='line'> <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">example_started</span><span class="p">(</span><span class="n">example</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@hours_wasted</span> <span class="o">+=</span> <span class="n">example</span><span class="o">.</span><span class="n">metadata</span><span class="o">[</span><span class="ss">:hours_wasted</span><span class="o">]</span> <span class="k">if</span> <span class="n">example</span><span class="o">.</span><span class="n">metadata</span><span class="o">[</span><span class="ss">:hours_wasted</span><span class="o">]</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">dump_summary</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="n">example_count</span><span class="p">,</span> <span class="n">failure_count</span><span class="p">,</span> <span class="n">pending_count</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s2">&quot;I can&#39;t believe we have wasted </span><span class="si">#{</span><span class="vi">@hours_wasted</span><span class="si">}</span><span class="s2"> hours on this!!!!&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>rspec --require hours_wasted_formatter -f p -f HoursWastedFormatter
+</span><span class='line'>..
+</span><span class='line'>
+</span><span class='line'>Finished in 0.00069 seconds
+</span><span class='line'>2 examples, 0 failures
+</span><span class='line'>I can<span class="err">&#39;</span>t believe we have wasted 930 hours on this!!!!
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is where a lot of extensibility in RSpec comes from. Developers can add tags to their specs, those tags are stored in the <code>example.metadata</code> and can be read and manipulated from there. So anytime you want to work with tags, remember <code>example.metadata</code>!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Good Friday]]></title>

@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Splunking Netstat - Steven Farlie's Blog</title>
+  <title>Steven Farlie's Blog</title>
   <meta name="author" content="Steven Farlie">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://stevenfarlie.github.io/blog/2013/12/24/splunking-netstat">
+  <link rel="canonical" href="http://stevenfarlie.github.io/blog/page/2">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/feed.xml" rel="alternate" title="Steven Farlie's Blog" type="application/atom+xml">
@@ -63,12 +63,15 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div>
-<article class="hentry" role="article">
+      <div class="blog-index">
   
+  
+  
+    <article>
+      
   <header>
     
-      <h1 class="entry-title">Splunking Netstat</h1>
+      <h1 class="entry-title"><a href="/blog/2013/12/24/splunking-netstat/">Splunking Netstat</a></h1>
     
     
       <p class="meta">
@@ -91,7 +94,7 @@
   </header>
 
 
-<div class="entry-content"><p>Recently I found myself doing a little capacity planning for a customer&rsquo;s web service. They were using <a href="http://unicorn.bogomips.org/">Unicorn</a>, which, although a perfectly serviceable webserver, has limitations on the number of HTTP requests it can service at one time. Unicorn uses a fixed process model and requires that the application completes requests quickly. If the application doesn&rsquo;t then Unicorn can quickly run out of processes to service new requests. The resulting behaviour is, erm, <em>undesirable</em>.</p>
+  <div class="entry-content"><p>Recently I found myself doing a little capacity planning for a customer&rsquo;s web service. They were using <a href="http://unicorn.bogomips.org/">Unicorn</a>, which, although a perfectly serviceable webserver, has limitations on the number of HTTP requests it can service at one time. Unicorn uses a fixed process model and requires that the application completes requests quickly. If the application doesn&rsquo;t then Unicorn can quickly run out of processes to service new requests. The resulting behaviour is, erm, <em>undesirable</em>.</p>
 
 <p>We need to keep on top of the Linux TCP stack to make sure that Unicorn is being used for what it is intended. Enter <a href="http://www.splunk.com/">Splunk</a>, the swiss-army chainsaw of log analysis. My customer uses it for basically everything. It&rsquo;s a very solid tool, but I found support for logging the Linux network stack to be very limited. <a href="http://apps.splunk.com/app/273/">Splunk App for Unix and Linux</a>, from what I could tell, basically just logged the output of the <code>netstat</code> command. You can see below that it isn&rsquo;t the most parseable output format:</p>
 
@@ -171,59 +174,20 @@ SHOULD_LINEMERGE=false
 
 <p>Happy Splunking!</p>
 </div>
-
-
-  <footer>
-    <p class="meta">
-      
   
-
-<span class="byline author vcard">Posted by <span class="fn">Steven Farlie</span></span>
-
-      
-
-
-
-
-
-
-
-
   
 
 
-<time datetime="2013-12-24T16:49:49+11:00" pubdate data-updated="true">Dec 24<span>th</span>, 2013</time>
-      
-
-<span class="categories">
+    </article>
   
-    <a class='category' href='/blog/categories/linux/'>linux</a>, <a class='category' href='/blog/categories/monitoring/'>monitoring</a>, <a class='category' href='/blog/categories/netstat/'>netstat</a>, <a class='category' href='/blog/categories/networking/'>networking</a>, <a class='category' href='/blog/categories/splunk/'>splunk</a>, <a class='category' href='/blog/categories/statistics/'>statistics</a>
-  
-</span>
-
-
-    </p>
+  <div class="pagination">
     
-      <div class="sharing">
-  
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://stevenfarlie.github.io/blog/2013/12/24/splunking-netstat/" data-via="" data-counturl="http://stevenfarlie.github.io/blog/2013/12/24/splunking-netstat/" >Tweet</a>
-  
-  
-  
-</div>
-
+    <a href="/blog/archives">Blog Archives</a>
     
-    <p class="meta">
-      
-      
-        <a class="basic-alignment right" href="/blog/2013/12/24/backing-it-up-with-rdiff-backup/" title="Next Post: Backing it up with rdiff-backup">Backing it up with rdiff-backup &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
-
+    <a class="next" href="/">Newer &rarr;</a>
+    
+  </div>
 </div>
-
 <aside class="sidebar">
   
     <section>
@@ -259,7 +223,6 @@ SHOULD_LINEMERGE=false
 
   
 </aside>
-
 
     </div>
   </div>
